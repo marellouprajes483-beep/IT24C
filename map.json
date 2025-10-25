@@ -1,0 +1,25 @@
+[
+    {
+        "name" : "JOLLIBEE",
+        "description" : "Fast Food Restaurant",
+        "lat" :  8.3673013,
+        "lng" : 124.8652139,
+        "img" : "https://tse2.mm.bing.net/th/id/OIP.uIFUwO4qePuIfIqR1Pa-YwHaEK?rs=1&pid=ImgDetMain&o=7&rm=3"
+    },
+
+    {
+        "name" : "7-ELEVEN",
+        "description" : "Convenience Store",
+        "lat" :   8.3675230,  
+        "lng" : 124.8651080,
+        "img" : "https://www.lebensmittelzeitung.net/news/media/25/7-Eleven-247148.jpeg"
+    },
+
+    {
+        "name" : "MUNICIPAL MARKET FOOD COURT",
+        "description" : "delicious lechon manok and liempo",
+        "lat" : 8.3661017,  
+        "lng" : 124.8650857,
+        "img" : "https://www.pinayads.com/wp-content/uploads/2021/07/0-02-06-47bed5add5e4dbbd7512c48236634abd93c5b9131974628522c2bdc15d0e2915_e657bc3664fb28e3.jpg"
+    }
+]
