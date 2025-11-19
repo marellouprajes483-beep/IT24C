@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAR's Weather App</title>
+   
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+     
+        :root {
+            --color-background-light:#294646;
+            --color-background-dark: #d6a7bd; 
+            --color-card-bg: #55b18d;    
+            --color-header-light: #286653; 
+            --color-header-dark: #137766; 
+            --color-text-dark: #333333;       
+            --color-text-accent: #000000; 
+            --color-border-soft: #000000; 
+            --color-button-hover: #ffffff; 
+            --radius-small: 8px;
+            --radius-medium: 15px;
+            --radius-large: 25px; 
+            --shadow-soft: 0 5px 15px rgba(0, 0, 0, 0.08);
+
+            
+            --color-flower-petal: #FFECF5; 
+            --color-flower-center: #FFDD00; 
+            --flower-size: 30px; 
+        }
+
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            color: var(--color-text-dark);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden; 
+            
+            background: linear-gradient(135deg, var(--color-background-light) 0%, var(--color-background-dark) 100%);
+        }
+
+        
+        @keyframes float-flower {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            25% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .flower-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0; 
+            overflow: hidden; 
+        }
+
+        .flower {
+            position: absolute;
+            background-color: transparent; 
+            width: var(--flower-size);
+            height: var(--flower-size);
+            border-radius: 50%; 
+            
+            
+            box-shadow:
+              
+                calc(var(--flower-size) * -0.6) calc(var(--flower-size) * -0.6) 0 0 var(--color-flower-petal),
+                calc(var(--flower-size) * 0.6) calc(var(--flower-size) * -0.6) 0 0 var(--color-flower-petal),
+                calc(var(--flower-size) * -0.6) calc(var(--flower-size) * 0.6) 0 0 var(--color-flower-petal),
+                calc(var(--flower-size) * 0.6) calc(var(--flower-size) * 0.6) 0 0 var(--color-flower-petal),
+                0 calc(var(--flower-size) * -0.8) 0 0 var(--color-flower-petal),
+                0 calc(var(--flower-size) * 0.8) 0 0 var(--color-flower-petal),
+                calc(var(--flower-size) * -0.8) 0 0 var(--color-flower-petal),
+                calc(var(--flower-size) * 0.8) 0 0 var(--color-flower-petal),
+                0 0 0 calc(var(--flower-size) * 0.3) var(--color-flower-center); 
+
+            animation: float-flower linear infinite;
+        }
+
+        
+        .flower:nth-child(1) { left: 10%; animation-duration: 20s; animation-delay: 0s; transform: scale(0.8); }
+        .flower:nth-child(2) { left: 30%; animation-duration: 25s; animation-delay: 5s; transform: scale(1.1); }
+        .flower:nth-child(3) { left: 60%; animation-duration: 18s; animation-delay: 10s; transform: scale(0.9); }
+        .flower:nth-child(4) { left: 80%; animation-duration: 22s; animation-delay: 15s; transform: scale(1.05); }
+        .flower:nth-child(5) { left: 20%; animation-duration: 30s; animation-delay: 8s; transform: scale(0.7); }
+        .flower:nth-child(6) { left: 70%; animation-duration: 23s; animation-delay: 3s; transform: scale(1.2); }
+        .flower:nth-child(7) { left: 45%; animation-duration: 28s; animation-delay: 12s; transform: scale(0.95); }
+        .flower:nth-child(8) { left: 5%; animation-duration: 19s; animation-delay: 7s; transform: scale(1.15); }
+
+        /* --- MAIN APPLICATION CARD --- */
+        .card {
+            background-color: var(--color-card-bg);
+            padding: 0; 
+            width: 380px; 
+            max-width: 95vw; 
+            border-radius: var(--radius-large); 
+            box-shadow: var(--shadow-soft); 
+            border: 2px solid var(--color-border-soft); 
+            z-index: 1; 
+            position: relative; 
+            overflow: hidden; 
+        }
+
+        /* --- Header Section (Top band with welcome text) --- */
+        .header {
+            background: linear-gradient(90deg, var(--color-header-light) 0%, var(--color-header-dark) 100%);
+            color: var(--color-card-bg); 
+            padding: 18px 25px;
+            font-size: 1.2em;
+            font-weight: 700;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1); 
+            border-bottom: 2px solid var(--color-header-dark);
+        }
+
+        .header h1 {
+            margin: 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- Content Padding --- */
+        .content-section {
+            padding: 25px;
+        }
+
+        .search-area {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .button-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #cityInput {
+            background-color: #FFF5FA; 
+            color: var(--color-text-dark);
+            padding: 14px 20px;
+            border: 1px solid var(--color-border-soft);
+            border-radius: var(--radius-large);
+            width: 100%;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 1em;
+            text-align: center;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #cityInput::placeholder {
+            color: #FFC0CB; 
+        }
+
+        #cityInput:focus {
+            outline: none;
+            border-color: var(--color-header-light);
+            box-shadow: 0 0 0 3px rgba(255,192,203,0.3); 
+        }
+
+        #searchBtn {
+          
+            background: linear-gradient(90deg, var(--color-header-light) 0%, var(--color-header-dark) 100%);
+            color: var(--color-card-bg);
+            padding: 14px 20px;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1.1em;
+            font-weight: 700;
+            border: none;
+            border-radius: var(--radius-large);
+            box-shadow: 0 3px 8px rgba(255,192,203,0.4); 
+            transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+           
+            width: auto; 
+            max-width: 250px;
+        }
+
+        #searchBtn:hover {
+            background: linear-gradient(90deg, var(--color-header-dark) 0%, var(--color-button-hover) 100%);
+            box-shadow: 0 5px 12px rgba(255,192,203,0.6);
+        }
+
+        #searchBtn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 5px rgba(255,192,203,0.4);
+        }
+
+        #error {
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #FF4477; 
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* --- Weather Info Section --- */
+        #weatherInfo {
+            text-align: left;
+            padding-top: 15px;
+            border-top: 1px dashed var(--color-border-soft); 
+        }
+
+        #cityName {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--color-text-accent); 
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr; 
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            border-radius: var(--radius-medium);
+            background-color: #FFF8FC; 
+            border: 1px solid var(--color-border-soft);
+        }
+
+        .info-label {
+            font-size: 0.9em;
+            color: var(--color-text-dark);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--color-header-dark); 
+        }
+
+        .description-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: var(--color-background-dark); 
+            border-radius: var(--radius-medium);
+            color: var(--color-text-accent);
+            box-shadow: 0 2px 8px rgba(255,192,203,0.3); 
+        }
+
+        #weatherIcon {
+            width: 90px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        #description {
+            font-weight: 700;
+            color: var(--color-text-accent);
+            font-size: 1.1em;
+            text-transform: capitalize;
+        }
+    </style>
+</head>
+<body>
+ 
+    <div class="flower-container">
+        <div class="flower"></div>
+        <div class="flower"></div>
+        <div class="flower"></div>
+        <div class="flower"></div>
+        <div class="flower"></div>
+        <div class="flower"></div>
+        <div class="flower"></div>
+        <div class="flower"></div>
+    </div>
+    
+  
+    <div class="card">
+        <div class="header">
+            <h1>MAR's Weather App</h1>
+        </div>
+        
+        <div class="content-section">
+            <div class="search-area">
+                <input type="text" id="cityInput" placeholder="Enter city name">
+                
+               
+                <div class="button-wrapper">
+                    <button id="searchBtn">Search</button>
+                </div>
+            </div>
+
+            <div id="error"></div> 
+
+            <div id="weatherInfo" style="display: none;">
+                
+                <div id="cityName"></div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Temperature</span>
+                        <span id="temperature" class="info-value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Humidity</span>
+                        <span id="humidity" class="info-value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Sea Level</span>
+                        <span id="seaLevel" class="info-value"></span>
+                    </div>
+                </div>
+
+                <div class="description-block">
+                    <img id="weatherIcon" src="" alt="Weather Icon">
+                    <span id="description"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        const apiKey = "36969dd54b3df2a4e17f7731a1903fcd"; 
+        
+        const searchBtn = document.getElementById("searchBtn");
+        const cityInput = document.getElementById("cityInput");
+        const weatherInfo = document.getElementById("weatherInfo");
+        const errorText = document.getElementById("error");
+        
+        searchBtn.addEventListener("click", getWeather);
+
+        async function getWeather() {
+            errorText.textContent = "";
+            weatherInfo.style.display = "none";
+
+            const city = cityInput.value.trim();
+            if (!city) {
+                errorText.textContent = "Please enter a city name.";
+                return;
+            }
+
+            errorText.textContent = "Loading...";
+
+           
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                   
+                    let errorMessage = "City not found or API error.";
+                    if (response.status === 404) {
+                        errorMessage = "City not found. Please check spelling.";
+                    }
+                    throw new Error(errorMessage);
+                }
+
+                const data = await response.json();
+                showWeather(data);
+                errorText.textContent = ""; 
+            } catch (err) {
+                errorText.textContent = "❌ " + err.message;
+            }
+        }
+
+        function showWeather(data) {
+            document.getElementById("cityName").textContent = data.name;
+            document.getElementById("temperature").textContent = data.main.temp.toFixed(1) + " °C";
+            document.getElementById("humidity").textContent = data.main.humidity + "%";
+            
+           
+            document.getElementById("seaLevel").textContent = data.main.sea_level ? data.main.sea_level.toFixed(0) + " hPa" : "N/A";
+            
+            document.getElementById("description").textContent = data.weather[0].description;
+            
+             
+            document.getElementById("weatherIcon").src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+
+            weatherInfo.style.display = "block";
+            cityInput.value = "";
+        }
+    </script>
+</body>
+</html>
